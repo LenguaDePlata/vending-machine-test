@@ -2,23 +2,24 @@
 
 namespace App\UI\Console;
 
-use App\Application\Console\Commands\CommandFactory;
+use App\Application\Commands\CommandFactory;
 
 class Reader
 {	
+	private const QUIT = 'quit';
 	private $currentLine;
 
-	public function readLine()
+	public function readLine(): string
 	{
 		return ($this->currentLine = trim(fgets(STDIN)));
 	}
 
-	public function quitted()
+	public function quitted(): bool
 	{
-		return ($this->currentLine === 'quit') || ($this->currentLine === 'q');
+		return ($this->currentLine === self::QUIT);
 	}
 
-	public function executeCommand()
+	public function executeCommand(): string
 	{
 		$response = '';
 		$command = CommandFactory::build($this->currentLine);
@@ -30,12 +31,12 @@ class Reader
 		return $response;
 	}
 
-	private function isValidCommand($command)
+	private function isValidCommand($command): bool
 	{
 		return !is_null($command);
 	}
 
-	private function getInvalidResponse()
+	private function getInvalidResponse(): string
 	{
 		return 'Unknown or invalid command';
 	}
