@@ -3,41 +3,51 @@
 namespace Application\Commands;
 
 use Application\Exceptions\InvalidCommandException;
+use Application\Services\CamelCaser;
 
 class CommandFactory
 {
-	private static $existingCommands = ['get', 'service', 'returnCoin', 'insertCoin'];
+	private static $existingCommands = [CommandEnum::GET, CommandEnum::SERVICE, CommandEnum::RETURN_COIN, CommandEnum::INSERT_COIN];
 
-	public static function build(string $commandLine): Command
+	private $camelCaser;
+
+	public function __construct(CamelCaser $camelCaser)
 	{
-		$commandName = self::parseCommandName($commandLine);
+		$this->camelCaser = $camelCaser;
+	}
+
+	public function create(string $commandLine): Command
+	{
+		$commandName = $this->parseCommandName($commandLine);
 		if (!in_array($commandName, self::$existingCommands)) {
 			throw new InvalidCommandException($commandName);
 		}
 
-		$commandObjectName = '\Application\Commands\\'.ucfirst($commandName).'Command';
+		$commandObjectName = '\Application\Commands\\'.$commandName.'Command';
 		$command = new $commandObjectName($commandLine);
 
 		return $command;
 	}
 
-	private static function parseCommandName(string $commandLine): string
+	private function parseCommandName(string $commandLine): string
 	{
 		$commandBits = explode(', ', $commandLine);
 		$commandName = array_pop($commandBits);
 		if (is_numeric($commandName)) {
-			$commandName = 'insertCoin';
+			$commandName = CommandEnum::INSERT_COIN;
 		} else {
-			if (self::isGetterCommand($commandName)) {
-				$commandName = 'get';
+			if ($this->isGetterCommand($commandName)) {
+				$commandName = CommandEnum::GET;
+			} else {
+				$commandName = $this->camelCaser->__invoke($commandName);
 			}
 		}
 		return $commandName;
 	}
 
-	private static function isGetterCommand(string $commandName): bool
+	private function isGetterCommand(string $commandName): bool
 	{
 		$commandBits = explode('-', $commandName);
-		return (strtolower($commandBits[0]) == 'get');
+		return (ucfirst(strtolower($commandBits[0])) == CommandEnum::GET);
 	}
 }

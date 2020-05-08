@@ -3,11 +3,17 @@
 namespace UI\Console;
 
 use Application\Commands\CommandFactory;
+use Application\Commands\CommandEnum;
 
 class Reader
-{	
-	private const QUIT = 'quit';
+{
 	private $currentLine;
+	private $commandFactory;
+
+	public function __construct(CommandFactory $commandFactory)
+	{
+		$this->commandFactory = $commandFactory;
+	}
 
 	public function readLine(): string
 	{
@@ -16,14 +22,14 @@ class Reader
 
 	public function quitted(): bool
 	{
-		return ($this->currentLine === self::QUIT);
+		return ($this->currentLine === strtoupper(CommandEnum::QUIT));
 	}
 
 	public function executeCommand(): string
 	{
 		$response = '';
 		try {
-			$command = CommandFactory::build($this->currentLine);
+			$command = $this->commandFactory->create($this->currentLine);
 			$response = $command->run();
 		} catch (\Exception $e) {
 			$response = $e->getMessage();

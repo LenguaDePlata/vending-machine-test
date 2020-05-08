@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Application\Commands;
 
 abstract class BaseCommand
 {
@@ -16,6 +16,6 @@ abstract class BaseCommand
 
 	private function parseCommandLine(): void
 	{
-		
+
 	}
 }
