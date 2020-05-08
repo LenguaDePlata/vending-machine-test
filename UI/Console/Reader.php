@@ -1,8 +1,8 @@
 <?php
 
-namespace App\UI\Console;
+namespace UI\Console;
 
-use App\Application\Commands\CommandFactory;
+use Application\Commands\CommandFactory;
 
 class Reader
 {	
@@ -22,22 +22,12 @@ class Reader
 	public function executeCommand(): string
 	{
 		$response = '';
-		$command = CommandFactory::build($this->currentLine);
-		if ($this->isValidCommand($command)) {
+		try {
+			$command = CommandFactory::build($this->currentLine);
 			$response = $command->run();
-		} else {
-			$response = $this->getInvalidResponse();
+		} catch (\Exception $e) {
+			$response = $e->getMessage();
 		}
 		return $response;
-	}
-
-	private function isValidCommand($command): bool
-	{
-		return !is_null($command);
-	}
-
-	private function getInvalidResponse(): string
-	{
-		return 'Unknown or invalid command';
 	}
 }
