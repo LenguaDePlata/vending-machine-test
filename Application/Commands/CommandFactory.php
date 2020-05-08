@@ -15,7 +15,7 @@ class CommandFactory
 			throw new InvalidCommandException($commandName);
 		}
 
-		$commandObjectName = ucfirst($commandName).'Command';
+		$commandObjectName = '\Application\Commands\\'.ucfirst($commandName).'Command';
 		$command = new $commandObjectName($commandLine);
 
 		return $command;
