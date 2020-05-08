@@ -2,10 +2,10 @@
 
 namespace Application\Commands;
 
-class GetCommand extends BaseCommand implements Command
+class ReturnCoinCommand extends BaseCommand implements Command
 {
 	public function run(): string
 	{
-		return 'SODA';
+		return 'COIN';
 	}
 }

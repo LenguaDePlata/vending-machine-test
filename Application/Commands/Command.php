@@ -3,5 +3,5 @@
 namespace Application\Commands;
 
 interface Command {
-	public function run();
+	public function run(): string;
 }
