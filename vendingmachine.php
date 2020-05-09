@@ -3,7 +3,7 @@
 
 require 'autoloader.php';
 
-$shell = \UI\Console\ReaderFactory::create();
+$shell = \UI\Console\ReaderBuilder::build();
 echo 'Starting Vending Machine Service...'.PHP_EOL;
 
 while ($shell->readLine()) {

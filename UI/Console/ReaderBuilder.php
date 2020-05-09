@@ -5,9 +5,9 @@ namespace UI\Console;
 use Application\Commands\CommandFactory;
 use Application\Services\CamelCaser;
 
-class ReaderFactory
+class ReaderBuilder
 {
-	public static function create(): Reader
+	public static function build(): Reader
 	{
 		$camelCaserService = new CamelCaser();
 		$commandFactory = new CommandFactory($camelCaserService);
