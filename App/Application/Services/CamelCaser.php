@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Services;
+namespace App\Application\Services;
 
 class CamelCaser
 {

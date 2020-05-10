@@ -1,9 +1,9 @@
 <?php
 
-namespace Application\Commands;
+namespace App\Application\Commands;
 
-use Application\Exceptions\InvalidCommandException;
-use Application\Services\CamelCaser;
+use App\Application\Exceptions\InvalidCommandException;
+use App\Application\Services\CamelCaser;
 
 class CommandFactory
 {
@@ -23,7 +23,7 @@ class CommandFactory
 			throw new InvalidCommandException($commandName);
 		}
 
-		$commandObjectName = '\Application\Commands\\'.$commandName.'Command';
+		$commandObjectName = '\App\Application\Commands\\'.$commandName.'Command';
 		$command = new $commandObjectName($commandLine);
 
 		return $command;

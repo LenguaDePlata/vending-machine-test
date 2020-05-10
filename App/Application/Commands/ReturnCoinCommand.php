@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Commands;
+namespace App\Application\Commands;
 
 class ReturnCoinCommand extends BaseCommand implements Command
 {

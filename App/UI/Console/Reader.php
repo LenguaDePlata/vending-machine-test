@@ -1,9 +1,9 @@
 <?php
 
-namespace UI\Console;
+namespace App\UI\Console;
 
-use Application\Commands\CommandFactory;
-use Application\Commands\CommandEnum;
+use App\Application\Commands\CommandFactory;
+use App\Application\Commands\CommandEnum;
 
 class Reader
 {

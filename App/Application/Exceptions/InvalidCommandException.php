@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Exceptions;
+namespace App\Application\Exceptions;
 
 class InvalidCommandException extends \Exception
 {

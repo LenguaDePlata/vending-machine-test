@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Commands;
+namespace App\Application\Commands;
 
 class InsertCoinCommand extends BaseCommand implements Command
 {

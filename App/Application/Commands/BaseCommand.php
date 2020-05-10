@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Commands;
+namespace App\Application\Commands;
 
 abstract class BaseCommand
 {
@@ -14,8 +14,9 @@ abstract class BaseCommand
 		$this->parseCommandLine();
 	}
 
-	private function parseCommandLine(): void
+	protected function parseCommandLine(): void
 	{
-
+		$this->arguments = explode(', ', $this->commandLine);
+		array_pop($this->arguments);
 	}
 }

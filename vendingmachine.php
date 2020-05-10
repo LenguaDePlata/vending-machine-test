@@ -1,9 +1,11 @@
 #!/usr/bin/php
 <?php
 
-require 'autoloader.php';
+require __DIR__ . '/vendor/autoload.php';
 
-$shell = \UI\Console\ReaderBuilder::build();
+$container = new DI\Container();
+
+$shell = $container->get('App\UI\Console\Reader');
 echo 'Starting Vending Machine Service...'.PHP_EOL;
 
 while ($shell->readLine()) {
