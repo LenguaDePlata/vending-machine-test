@@ -2,7 +2,7 @@
 
 namespace App\Application\Commands;
 
-class CommandEnum {
+final class CommandEnum {
 	public const GET = 'Get';
 	public const SERVICE = 'Service';
 	public const RETURN_COIN = 'ReturnCoin';
