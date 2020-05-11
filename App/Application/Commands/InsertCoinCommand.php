@@ -8,4 +8,9 @@ class InsertCoinCommand extends BaseCommand implements Command
 	{
 		return 'INSERTED';
 	}
+
+	protected function validateArguments(): void
+	{
+		
+	}
 }

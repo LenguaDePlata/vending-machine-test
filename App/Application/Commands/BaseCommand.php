@@ -12,6 +12,7 @@ abstract class BaseCommand
 	{
 		$this->commandLine = $commandLine;
 		$this->parseCommandLine();
+		$this->validateArguments();
 	}
 
 	protected function parseCommandLine(): void
@@ -19,4 +20,6 @@ abstract class BaseCommand
 		$this->arguments = explode(', ', $this->commandLine);
 		array_pop($this->arguments);
 	}
+
+	abstract protected function validateArguments(): void;
 }

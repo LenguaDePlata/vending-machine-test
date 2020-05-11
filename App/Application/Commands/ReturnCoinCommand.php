@@ -8,4 +8,9 @@ class ReturnCoinCommand extends BaseCommand implements Command
 	{
 		return 'COIN';
 	}
+
+	protected function validateArguments(): void
+	{
+		
+	}
 }
