@@ -25,11 +25,11 @@ class ServiceCommand extends BaseCommand implements Command
 
 	private function getAvailableChange(): Change
 	{
-
+		return new Change();
 	}
 
 	private function getAvailableItems(): Stock
 	{
-
+		return new Stock();
 	}
 }

@@ -4,16 +4,19 @@ namespace App\Application\Commands;
 
 use App\Application\Exceptions\InvalidCommandException;
 use App\Application\Services\CamelCaser;
+use DI\Container;
 
 class CommandFactory
 {
 	private static $existingCommands = [CommandEnum::GET, CommandEnum::SERVICE, CommandEnum::RETURN_COIN, CommandEnum::INSERT_COIN];
 
 	private $camelCaser;
+	private $container;
 
-	public function __construct(CamelCaser $camelCaser)
+	public function __construct(CamelCaser $camelCaser, Container $container)
 	{
 		$this->camelCaser = $camelCaser;
+		$this->container = $container;
 	}
 
 	public function create(string $commandLine): Command
@@ -24,7 +27,8 @@ class CommandFactory
 		}
 
 		$commandObjectName = '\App\Application\Commands\\'.$commandName.'Command';
-		$command = new $commandObjectName($commandLine);
+		$command = $this->container->get($commandObjectName);
+		$command->setCommandLine($commandLine);
 
 		return $command;
 	}

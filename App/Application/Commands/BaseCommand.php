@@ -8,7 +8,7 @@ abstract class BaseCommand
 	protected $arguments = [];
 	protected $validationErrors = [];
 
-	public function __construct(string $commandLine)
+	public function setCommandLine(string $commandLine): void
 	{
 		$this->commandLine = $commandLine;
 		$this->parseCommandLine();
