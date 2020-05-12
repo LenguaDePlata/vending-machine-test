@@ -6,6 +6,7 @@ use App\Application\UseCases\ServiceConfigurer;
 use App\Domain\VendingMachine\ValueObjects\Change;
 use App\Domain\VendingMachine\ValueObjects\Stock;
 use App\Application\Exceptions\NotEnoughArgumentsException;
+use App\Application\Exceptions\InvalidArgumentTypeException;
 
 class ServiceCommand extends BaseCommand implements Command
 {
@@ -52,6 +53,11 @@ class ServiceCommand extends BaseCommand implements Command
 	{
 		if (count($this->arguments) < 6) {
 			throw new NotEnoughArgumentsException();
+		}
+		foreach ($this->arguments as $argument) {
+			if (!preg_match('/^\d+$/', $argument)) {
+				throw new InvalidArgumentTypeException('int');
+			}
 		}
 	}
 }
