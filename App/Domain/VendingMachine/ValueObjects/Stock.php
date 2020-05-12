@@ -12,9 +12,9 @@ class Stock
 								int $sodaItems,
 								int $juiceItems)
 	{
-		$this->waterItems = $this->waterItems;
-		$this->sodaItems = $this->sodaItems;
-		$this->juiceItems = $this->juiceItems;
+		$this->waterItems = $waterItems;
+		$this->sodaItems = $sodaItems;
+		$this->juiceItems = $juiceItems;
 	}
 
 	public function getWaterItems(): int
