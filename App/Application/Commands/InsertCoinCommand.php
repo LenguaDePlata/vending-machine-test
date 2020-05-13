@@ -3,6 +3,7 @@
 namespace App\Application\Commands;
 
 use App\Application\UseCases\CoinInserter;
+use App\Application\Validators\InsertCoinValidator;
 
 class InsertCoinCommand extends BaseCommand implements Command
 {
@@ -19,5 +20,10 @@ class InsertCoinCommand extends BaseCommand implements Command
 	public function run(): string
 	{
 		return 'INSERTED';
+	}
+
+	protected function parseCommandLine(): void
+	{
+		$this->arguments = explode(', ', $this->commandLine);
 	}
 }
