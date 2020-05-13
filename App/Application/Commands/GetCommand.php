@@ -8,9 +8,4 @@ class GetCommand extends BaseCommand implements Command
 	{
 		return 'SODA';
 	}
-
-	protected function validateArguments(): void
-	{
-		
-	}
 }

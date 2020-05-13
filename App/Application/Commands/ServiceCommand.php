@@ -18,14 +18,13 @@ class ServiceCommand extends BaseCommand implements Command
 	private const JUICE_ITEMS_ARG_POSITION = 5;
 
 	private $serviceConfigurer;
-	private $serviceValidator;
 	
 	public function __construct(
 		ServiceConfigurer $serviceConfigurer,
 		ServiceValidator $serviceValidator)
 	{
 		$this->serviceConfigurer = $serviceConfigurer;
-		$this->serviceValidator = $serviceValidator;
+		parent::__construct($serviceValidator);
 	}
 
 	public function run(): string
@@ -50,10 +49,5 @@ class ServiceCommand extends BaseCommand implements Command
 		$waterItems = $this->arguments[self::WATER_ITEMS_ARG_POSITION];
 		$juiceItems = $this->arguments[self::JUICE_ITEMS_ARG_POSITION];
 		return new Stock($sodaItems, $waterItems, $juiceItems);
-	}
-
-	protected function validateArguments(): void
-	{
-		$this->serviceValidator->validate($this->arguments);
 	}
 }

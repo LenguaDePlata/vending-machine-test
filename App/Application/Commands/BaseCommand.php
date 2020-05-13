@@ -2,17 +2,24 @@
 
 namespace App\Application\Commands;
 
+use App\Application\Validators\Validator;
+
 abstract class BaseCommand
 {
 	protected $commandLine;
 	protected $arguments = [];
-	protected $validationErrors = [];
+	protected $validator;
+
+	public function __construct(Validator $validator)
+	{
+		$this->validator = $validator;
+	}
 
 	public function setCommandLine(string $commandLine): void
 	{
 		$this->commandLine = $commandLine;
 		$this->parseCommandLine();
-		$this->validateArguments();
+		$this->validator->validate($this->arguments);
 	}
 
 	protected function parseCommandLine(): void
@@ -20,6 +27,4 @@ abstract class BaseCommand
 		$this->arguments = explode(', ', $this->commandLine);
 		array_pop($this->arguments);
 	}
-
-	abstract protected function validateArguments(): void;
 }
