@@ -3,10 +3,9 @@
 namespace App\Application\Commands;
 
 use App\Application\UseCases\ServiceConfigurer;
+use App\Application\Validators\ServiceValidator;
 use App\Domain\VendingMachine\ValueObjects\Change;
 use App\Domain\VendingMachine\ValueObjects\Stock;
-use App\Application\Exceptions\NotEnoughArgumentsException;
-use App\Application\Exceptions\InvalidArgumentTypeException;
 
 class ServiceCommand extends BaseCommand implements Command
 {
@@ -19,10 +18,14 @@ class ServiceCommand extends BaseCommand implements Command
 	private const JUICE_ITEMS_ARG_POSITION = 5;
 
 	private $serviceConfigurer;
+	private $serviceValidator;
 	
-	public function __construct(ServiceConfigurer $serviceConfigurer)
+	public function __construct(
+		ServiceConfigurer $serviceConfigurer,
+		ServiceValidator $serviceValidator)
 	{
 		$this->serviceConfigurer = $serviceConfigurer;
+		$this->serviceValidator = $serviceValidator;
 	}
 
 	public function run(): string
@@ -51,13 +54,6 @@ class ServiceCommand extends BaseCommand implements Command
 
 	protected function validateArguments(): void
 	{
-		if (count($this->arguments) < 6) {
-			throw new NotEnoughArgumentsException();
-		}
-		foreach ($this->arguments as $argument) {
-			if (!preg_match('/^\d+$/', $argument)) {
-				throw new InvalidArgumentTypeException('int');
-			}
-		}
+		$this->serviceValidator->validate($this->arguments);
 	}
 }
