@@ -48,4 +48,23 @@ class VendingMachine
 		$this->stock[self::SODA_ITEMS] = $sodaItems;
 		$this->stock[self::JUICE_ITEMS] = $juiceItems;
 	}
+
+	public function insertCoins(int $fiveCentCoins, 
+								int $tenCentCoins, 
+								int $twentyfiveCentCoins,
+								int $oneEuroCoins): void
+	{
+		$this->addToInsertedCoins(self::FIVE_CENT_COINS, $fiveCentCoins);
+		$this->addToInsertedCoins(self::TEN_CENT_COINS, $tenCentCoins);
+		$this->addToInsertedCoins(self::TWENTYFIVE_CENT_COINS, $twentyfiveCentCoins);
+		$this->addToInsertedCoins(self::ONE_EURO_COINS, $oneEuroCoins);
+	}
+
+	protected function addToInsertedCoins(int $typeOfCoin, int $coinsToAdd): void
+	{
+		if (!isset($this->insertedCoins[$typeOfCoin])) {
+			$this->insertedCoins[$typeOfCoin] = 0;
+		}
+		$this->insertedCoins[$typeOfCoin] += $coinsToAdd;
+	}
 }
