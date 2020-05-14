@@ -62,7 +62,7 @@ class VendingMachine
 		$this->addToInsertedCoins(Coin::ONE_EURO, $oneEuroCoins);
 	}
 
-	protected function addToInsertedCoins(int $typeOfCoin, int $coinsToAdd): void
+	protected function addToInsertedCoins(string $typeOfCoin, int $coinsToAdd): void
 	{
 		if (!isset($this->insertedCoins[$typeOfCoin])) {
 			$this->insertedCoins[$typeOfCoin] = 0;

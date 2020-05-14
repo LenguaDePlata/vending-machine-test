@@ -3,21 +3,17 @@
 namespace App\Application\Services;
 
 use App\Domain\VendingMachine\ValueObjects\Change;
+use App\Domain\VendingMachine\Enums\Coin;
 
 class CoinCounter
 {
-	private const FIVE_CENTS = '0.05';
-	private const TEN_CENTS = '0.10';
-	private const TWENTYFIVE_CENTS = '0.25';
-	private const ONE_EURO = '1';
-
 	public function __invoke(array $coins): Change
 	{
 		$totalCoins = [
-			self::FIVE_CENTS => 0,
-			self::TEN_CENTS => 0,
-			self::TWENTYFIVE_CENTS => 0,
-			self::ONE_EURO => 0
+			Coin::FIVE_CENTS => 0,
+			Coin::TEN_CENTS => 0,
+			Coin::TWENTYFIVE_CENTS => 0,
+			Coin::ONE_EURO => 0
 		];
 
 		foreach ($coins as $value) {
@@ -25,10 +21,10 @@ class CoinCounter
 		}
 
 		return new Change(
-			$totalCoins[self::FIVE_CENTS],
-			$totalCoins[self::TEN_CENTS],
-			$totalCoins[self::TWENTYFIVE_CENTS],
-			$totalCoins[self::ONE_EURO]
+			$totalCoins[Coin::FIVE_CENTS],
+			$totalCoins[Coin::TEN_CENTS],
+			$totalCoins[Coin::TWENTYFIVE_CENTS],
+			$totalCoins[Coin::ONE_EURO]
 		);
 	}
 }
