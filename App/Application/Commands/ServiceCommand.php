@@ -32,7 +32,7 @@ class ServiceCommand extends BaseCommand implements Command
 		$availableChange = $this->getAvailableChange();
 		$availableItems = $this->getAvailableItems();
 		$this->serviceConfigurer->__invoke($availableChange, $availableItems);
-		return 'Vending machine change and stock set';
+		return self::EMPTY_RESPONSE;
 	}
 
 	private function getAvailableChange(): Change

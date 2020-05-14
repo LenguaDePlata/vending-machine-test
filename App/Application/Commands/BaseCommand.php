@@ -6,6 +6,8 @@ use App\Application\Validators\Validator;
 
 abstract class BaseCommand
 {
+	protected const EMPTY_RESPONSE = '';
+	
 	protected $commandLine;
 	protected $arguments = [];
 	protected $validator;

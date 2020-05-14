@@ -4,6 +4,7 @@ namespace App\Application\Commands;
 
 use App\Application\UseCases\CoinInserter;
 use App\Application\Validators\InsertCoinValidator;
+use App\Application\Services\CoinCounter;
 
 class InsertCoinCommand extends BaseCommand implements Command
 {
@@ -24,7 +25,7 @@ class InsertCoinCommand extends BaseCommand implements Command
 	{
 		$insertedChange = $this->coinCounter->__invoke($this->arguments);
 		$this->coinInserter->__invoke($insertedChange);
-		return '';
+		return self::EMPTY_RESPONSE;
 	}
 
 	protected function parseCommandLine(): void
