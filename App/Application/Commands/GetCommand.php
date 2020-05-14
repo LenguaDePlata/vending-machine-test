@@ -17,6 +17,7 @@ class GetCommand extends BaseCommand implements Command
 	private $changeToCoinsParser;
 
 	private $itemName;
+	private $insertedCoins;
 
 	public function __construct(
 		ItemGetter $itemGetter,
@@ -34,7 +35,7 @@ class GetCommand extends BaseCommand implements Command
 
 	public function run(): string
 	{
-		$insertedChange = $this->coinCounter->__invoke($this->arguments);
+		$insertedChange = $this->coinCounter->__invoke($this->insertedCoins);
 		$this->coinInserter->__invoke($insertedChange);
 		$returnedChange = $this->itemGetter->__invoke($this->itemName);
 		return $this->parseResponse($returnedChange);
@@ -42,14 +43,24 @@ class GetCommand extends BaseCommand implements Command
 
 	private function parseResponse(Change $returnedChange): string
 	{
-		return '-> ' . $this->itemName . ', ' . $this->changeToCoinsParser->__invoke($returnedChange);
+		$response = '-> '.$this->itemName;
+		$coinString = $this->changeToCoinsParser->__invoke($returnedChange);
+		if (!empty($coinString)) {
+			$response .= ', ' . $coinString;
+		}
+		return $response;
 	}
 
 	protected function parseCommandLine(): void
 	{
 		$this->arguments = explode(', ', $this->commandLine);
+		
 		$commandName = array_pop($this->arguments);
 		$commandNameArray = explode('-', $commandName);
+		
 		$this->itemName = array_pop($commandNameArray);
+		$this->insertedCoins = $this->arguments;
+		
+		$this->arguments[] = $commandName;
 	}
 }

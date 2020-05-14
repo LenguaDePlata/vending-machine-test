@@ -7,10 +7,12 @@ use App\Application\Exceptions\InvalidArgumentTypeException;
 
 class ServiceValidator implements Validator
 {
+	private const NUMBER_OF_ARGUMENTS = 6;
+
 	public function validate(array $arguments): void
 	{
-		if (count($arguments) < 6) {
-			throw new NotEnoughArgumentsException();
+		if (count($arguments) != self::NUMBER_OF_ARGUMENTS) {
+			throw new InvalidNumberOfArgumentsException(self::NUMBER_OF_ARGUMENTS);
 		}
 		foreach ($arguments as $argument) {
 			if (!preg_match('/^\d+$/', $argument)) {

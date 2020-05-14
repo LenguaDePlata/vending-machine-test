@@ -3,18 +3,10 @@
 namespace App\Domain\VendingMachine\Models;
 
 use App\Domain\VendingMachine\Enums\Coin;
+use App\Domain\VendingMachine\Enums\Item;
 
 class VendingMachine
 {
-	private const FIVE_CENT_COINS = 0;
-	private const TEN_CENT_COINS = 1;
-	private const TWENTYFIVE_CENT_COINS = 2;
-	private const ONE_EURO_COINS = 3;
-
-	private const WATER_ITEMS = 0;
-	private const SODA_ITEMS = 1;
-	private const JUICE_ITEMS = 2;
-
 	private static $instance = null;
 
 	private $change = [];
@@ -46,9 +38,9 @@ class VendingMachine
 								int $sodaItems,
 								int $juiceItems): void
 	{
-		$this->stock[self::WATER_ITEMS] = $waterItems;
-		$this->stock[self::SODA_ITEMS] = $sodaItems;
-		$this->stock[self::JUICE_ITEMS] = $juiceItems;
+		$this->stock[Item::WATER] = $waterItems;
+		$this->stock[Item::SODA] = $sodaItems;
+		$this->stock[Item::JUICE] = $juiceItems;
 	}
 
 	public function insertCoins(int $fiveCentCoins, 
@@ -73,5 +65,15 @@ class VendingMachine
 	public function getInsertedCoins(): array
 	{
 		return $this->insertedCoins;
+	}
+
+	public function getItem(string $itemName): array
+	{
+		return [
+			Coin::FIVE_CENTS => 0,
+			Coin::TEN_CENTS => 0,
+			Coin::TWENTYFIVE_CENTS => 0,
+			Coin::ONE_EURO => 0
+		];
 	}
 }
