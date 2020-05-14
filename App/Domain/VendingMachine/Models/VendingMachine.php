@@ -4,7 +4,7 @@ namespace App\Domain\VendingMachine\Models;
 
 use App\Domain\VendingMachine\Enums\Coin;
 use App\Domain\VendingMachine\Enums\Item;
-use App\Domain\VendingMachine\Services\RecursiveArrayAdder;
+use App\Domain\VendingMachine\Services\CoinArrayAdder;
 use App\Domain\VendingMachine\Exceptions\NotEnoughInsertedCoinsException;
 use App\Domain\VendingMachine\Exceptions\NotEnoughChangeException;
 use App\Domain\VendingMachine\Exceptions\NotEnoughStockException;
@@ -22,20 +22,25 @@ class VendingMachine
 	private $stock = [];
 	private $insertedCoins = [];
 
-	private $recursiveArrayAdder;
+	private $coinArrayAdder;
 
 	private function __clone(){}
 
-	public function __construct(RecursiveArrayAdder $recursiveArrayAdder)
+	public function __construct(CoinArrayAdder $coinArrayAdder)
 	{
-		$this->recursiveArrayAdder = $recursiveArrayAdder;
+		$this->coinArrayAdder = $coinArrayAdder;
+		$this->stock = [
+			Item::WATER => 0,
+			Item::SODA => 0,
+			Item::JUICE => 0
+		];
 	}
 
 	public static function getInstance(): self
 	{
 		if (is_null(static::$instance)) {
-			$recursiveArrayAdder = new RecursiveArrayAdder();
-			self::$instance = new VendingMachine($recursiveArrayAdder);
+			$coinArrayAdder = new CoinArrayAdder();
+			self::$instance = new VendingMachine($coinArrayAdder);
 		}
 
 		return self::$instance;
@@ -106,7 +111,8 @@ class VendingMachine
 	protected function checkPrice(string $itemName): void
 	{
 		$itemPrice = self::$itemPrices[$itemName];
-		$totalInsertedCoinsValue = $this->recursiveArrayAdder->__invoke($this->insertedCoins);
+		$totalInsertedCoinsValue = $this->coinArrayAdder->__invoke($this->insertedCoins);
+		echo $totalInsertedCoinsValue.PHP_EOL;
 		if ($itemPrice > $totalInsertedCoinsValue) {
 			throw new NotEnoughInsertedCoinsException($itemPrice - $totalInsertedCoinsValue);
 		}
@@ -115,9 +121,9 @@ class VendingMachine
 	protected function checkAvailableChange(string $itemName): void
 	{
 		$itemPrice = self::$itemPrices[$itemName];
-		$neededChange = $totalInsertedCoinsValue - $itemPrice;
-		$totalMachineChangeValue = $this->recursiveArrayAdder->__invoke($this->change);
-		if ($neededChange > $totalMachineChangeValue) {
+		// $neededChange = $totalInsertedCoinsValue - $itemPrice;
+		$totalMachineChangeValue = $this->coinArrayAdder->__invoke($this->change);
+		if ($totalMachineChangeValue == 0) {
 			throw new NotEnoughChangeException($itemPrice);
 		}
 	}
@@ -129,6 +135,6 @@ class VendingMachine
 
 	protected function payItem(string $itemName): void
 	{
-		
+
 	}
 }
