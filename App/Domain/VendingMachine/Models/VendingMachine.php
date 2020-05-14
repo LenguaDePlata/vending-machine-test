@@ -2,6 +2,8 @@
 
 namespace App\Domain\VendingMachine\Models;
 
+use App\Domain\VendingMachine\Enums\Coin;
+
 class VendingMachine
 {
 	private const FIVE_CENT_COINS = 0;
@@ -34,10 +36,10 @@ class VendingMachine
 								int $tenCentCoins, 
 								int $twentyfiveCentCoins): void
 	{
-		$this->change[self::FIVE_CENT_COINS] = $fiveCentCoins;
-		$this->change[self::TEN_CENT_COINS] = $tenCentCoins;
-		$this->change[self::TWENTYFIVE_CENT_COINS] = $twentyfiveCentCoins;
-		$this->change[self::ONE_EURO_COINS] = 0;
+		$this->change[Coin::FIVE_CENTS] = $fiveCentCoins;
+		$this->change[Coin::TEN_CENTS] = $tenCentCoins;
+		$this->change[Coin::TWENTYFIVE_CENTS] = $twentyfiveCentCoins;
+		$this->change[Coin::ONE_EURO] = 0;
 	}
 
 	public function setStock(int $waterItems,
@@ -54,10 +56,10 @@ class VendingMachine
 								int $twentyfiveCentCoins,
 								int $oneEuroCoins): void
 	{
-		$this->addToInsertedCoins(self::FIVE_CENT_COINS, $fiveCentCoins);
-		$this->addToInsertedCoins(self::TEN_CENT_COINS, $tenCentCoins);
-		$this->addToInsertedCoins(self::TWENTYFIVE_CENT_COINS, $twentyfiveCentCoins);
-		$this->addToInsertedCoins(self::ONE_EURO_COINS, $oneEuroCoins);
+		$this->addToInsertedCoins(Coin::FIVE_CENTS, $fiveCentCoins);
+		$this->addToInsertedCoins(Coin::TEN_CENTS, $tenCentCoins);
+		$this->addToInsertedCoins(Coin::TWENTYFIVE_CENTS, $twentyfiveCentCoins);
+		$this->addToInsertedCoins(Coin::ONE_EURO, $oneEuroCoins);
 	}
 
 	protected function addToInsertedCoins(int $typeOfCoin, int $coinsToAdd): void
@@ -66,5 +68,10 @@ class VendingMachine
 			$this->insertedCoins[$typeOfCoin] = 0;
 		}
 		$this->insertedCoins[$typeOfCoin] += $coinsToAdd;
+	}
+
+	public function getInsertedCoins(): array
+	{
+		return $this->insertedCoins;
 	}
 }

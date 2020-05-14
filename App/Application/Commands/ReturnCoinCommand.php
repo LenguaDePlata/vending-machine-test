@@ -29,7 +29,7 @@ class ReturnCoinCommand extends BaseCommand implements Command
 	public function run(): string
 	{
 		$insertedChange = $this->coinCounter->__invoke($this->arguments);
-		$returnedChange = $this->coinReturner->__invoke($insertedChange);
+		$returnedChange = $this->coinReturner->__invoke();
 		return $this->parseResponse($returnedChange);
 	}
 

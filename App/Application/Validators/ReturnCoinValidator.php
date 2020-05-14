@@ -2,9 +2,17 @@
 
 namespace App\Application\Validators;
 
+use App\Application\Exceptions\InvalidCoinException;
+use App\Domain\VendingMachine\Enums\Coin;
+
 class ReturnCoinValidator implements Validator
 {
-	private static $validCoins = ['0.05', '0.10', '0.25', '1'];
+	private static $validCoins = [
+		Coin::FIVE_CENTS,
+		Coin::TEN_CENTS,
+		Coin::TWENTYFIVE_CENTS,
+		Coin::ONE_EURO
+	];
 
 	public function validate(array $arguments): void
 	{
