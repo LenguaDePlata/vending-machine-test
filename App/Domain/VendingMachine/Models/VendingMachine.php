@@ -76,7 +76,7 @@ class VendingMachine
 		$this->addToInsertedCoins(Coin::ONE_EURO, $oneEuroCoins);
 	}
 
-	protected function addToInsertedCoins(string $typeOfCoin, int $coinsToAdd): void
+	private function addToInsertedCoins(string $typeOfCoin, int $coinsToAdd): void
 	{
 		if (!isset($this->insertedCoins[$typeOfCoin])) {
 			$this->insertedCoins[$typeOfCoin] = 0;
@@ -101,39 +101,62 @@ class VendingMachine
 		return $this->getInsertedCoins();
 	}
 
-	protected function checkStock(string $itemName): void
+	private function checkStock(string $itemName): void
 	{
 		if ($this->stock[$itemName] == 0) {
 			throw new NotEnoughStockException();
 		}
 	}
 
-	protected function checkPrice(string $itemName): void
+	private function checkPrice(string $itemName): void
 	{
 		$itemPrice = self::$itemPrices[$itemName];
 		$totalInsertedCoinsValue = $this->coinArrayAdder->__invoke($this->insertedCoins);
-		echo $totalInsertedCoinsValue.PHP_EOL;
 		if ($itemPrice > $totalInsertedCoinsValue) {
 			throw new NotEnoughInsertedCoinsException($itemPrice - $totalInsertedCoinsValue);
 		}
 	}
 
-	protected function checkAvailableChange(string $itemName): void
+	private function checkAvailableChange(string $itemName): void
 	{
 		$itemPrice = self::$itemPrices[$itemName];
-		// $neededChange = $totalInsertedCoinsValue - $itemPrice;
-		$totalMachineChangeValue = $this->coinArrayAdder->__invoke($this->change);
-		if ($totalMachineChangeValue == 0) {
+		$totalInsertedCoinsValue = $this->coinArrayAdder->__invoke($this->insertedCoins);
+		$neededChangeAmount = $totalInsertedCoinsValue - $itemPrice;
+		$neededCoins = $this->splitAmountIntoCoins($neededChangeAmount);
+		if (!empty($neededCoins)) {
 			throw new NotEnoughChangeException($itemPrice);
 		}
 	}
 
-	protected function reduceStock(string $itemName): void
+	private function splitAmountIntoCoins(float $amount): array
+	{
+		$coins = [];
+		$amount = intval($amount*100);
+		while($amount > 0) {
+			if ($amount > intval(Coin::TWENTYFIVE_CENTS * 100)) {
+				$this->extractNumberOfCoinsFromAmount($coins, $amount, Coin::TWENTYFIVE_CENTS);
+			} else if ($amount > intval(Coin::TEN_CENTS * 100)) {
+				$this->extractNumberOfCoinsFromAmount($coins, $amount, Coin::TEN_CENTS);
+			} else if ($amount > intval(Coin::FIVE_CENTS * 100)) {
+				$this->extractNumberOfCoinsFromAmount($coins, $amount, Coin::FIVE_CENTS);
+			}
+		}
+		return $coins;
+	}
+
+	private function extractNumberOfCoinsFromAmount(array &$coins, int &$amount, $coinValue): void
+	{
+		$numberOfCoins = floor($amount / intval($coinValue * 100));
+		$amount = $amount % intval($coinValue * 100);
+		$coins[$coinValue] = $numberOfCoins;
+	}
+
+	private function reduceStock(string $itemName): void
 	{
 		$this->stock[$itemName]--;
 	}
 
-	protected function payItem(string $itemName): void
+	private function payItem(string $itemName): void
 	{
 
 	}
