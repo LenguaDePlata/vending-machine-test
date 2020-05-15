@@ -11,7 +11,7 @@ class CoinReturner
 	public function __invoke(): Change
 	{
 		$vendingMachine = VendingMachine::getInstance();
-		$returnedChange = $vendingMachine->getInsertedCoins();
+		$returnedChange = $vendingMachine->ejectInsertedCoins();
 		return new Change(
 			$returnedChange[Coin::FIVE_CENTS],
 			$returnedChange[Coin::TEN_CENTS],

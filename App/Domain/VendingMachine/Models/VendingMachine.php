@@ -84,13 +84,16 @@ class VendingMachine
 		$this->insertedCoins[$typeOfCoin] += $coinsToAdd;
 	}
 
-	public function getInsertedCoins(): array
+	public function ejectInsertedCoins(): array
 	{
-		return $this->insertedCoins;
+		$ejectedCoins = $this->insertedCoins;
+		$this->insertedCoins = [];
+		return $ejectedCoins;
 	}
 
 	public function getItem(string $itemName): array
 	{
+		$this->initializePurchaseChange();
 		$this->checkStock($itemName);
 		$this->checkPrice($itemName);
 		$this->checkAvailableChange($itemName);
@@ -98,7 +101,17 @@ class VendingMachine
 		$this->reduceStock($itemName);
 		$this->payItem($itemName);
 
-		return $this->getInsertedCoins();
+		return $this->ejectPurchaseChange();
+	}
+
+	private function initializePurchaseChange(): void
+	{
+		$this->changeToReturn = [
+			Coin::FIVE_CENTS => 0,
+			Coin::TEN_CENTS => 0,
+			Coin::TWENTYFIVE_CENTS => 0,
+			Coin::ONE_EURO => 0
+		];
 	}
 
 	private function checkStock(string $itemName): void
@@ -121,34 +134,77 @@ class VendingMachine
 	{
 		$itemPrice = self::$itemPrices[$itemName];
 		$totalInsertedCoinsValue = $this->coinArrayAdder->__invoke($this->insertedCoins);
+		echo $totalInsertedCoinsValue.PHP_EOL;
+		echo $itemPrice.PHP_EOL;
 		$neededChangeAmount = $totalInsertedCoinsValue - $itemPrice;
-		$neededCoins = $this->splitAmountIntoCoins($neededChangeAmount);
-		if (!empty($neededCoins)) {
+		$combinedVendingMachineChangeAfterPaying = $this->combineCoinArrays($this->change, $this->insertedCoins);
+
+		if (!$this->isGivenAmountContainedInThisAvailableChange($neededChangeAmount, $combinedVendingMachineChangeAfterPaying)) {
 			throw new NotEnoughChangeException($itemPrice);
 		}
 	}
 
-	private function splitAmountIntoCoins(float $amount): array
+	private function combineCoinArrays(array $first, array $second): array
 	{
-		$coins = [];
-		$amount = intval($amount*100);
-		while($amount > 0) {
-			if ($amount > intval(Coin::TWENTYFIVE_CENTS * 100)) {
-				$this->extractNumberOfCoinsFromAmount($coins, $amount, Coin::TWENTYFIVE_CENTS);
-			} else if ($amount > intval(Coin::TEN_CENTS * 100)) {
-				$this->extractNumberOfCoinsFromAmount($coins, $amount, Coin::TEN_CENTS);
-			} else if ($amount > intval(Coin::FIVE_CENTS * 100)) {
-				$this->extractNumberOfCoinsFromAmount($coins, $amount, Coin::FIVE_CENTS);
+		$result = [];
+		$missingKeys = array_diff_key($second, $first);
+		foreach ($first as $key => $value) {
+			if (isset($second[$key])) {
+				$result[$key] = $first[$key] + $second[$key];
+			} else {
+				$result[$key] = $first[$key];
 			}
 		}
-		return $coins;
+		foreach ($missingKeys as $key) {
+			$result[$key] = $second[$key];
+		}
+		return $result;
 	}
 
-	private function extractNumberOfCoinsFromAmount(array &$coins, int &$amount, $coinValue): void
+	private function isGivenAmountContainedInThisAvailableChange(float $givenAmount, array $availableChange): bool
 	{
-		$numberOfCoins = floor($amount / intval($coinValue * 100));
-		$amount = $amount % intval($coinValue * 100);
-		$coins[$coinValue] = $numberOfCoins;
+		$areContained = false;
+			echo $givenAmount.PHP_EOL;
+			print_r($availableChange);
+			echo PHP_EOL;
+		if ($givenAmount == 0) {
+			echo 'here'.PHP_EOL;
+			$areContained = true;
+		} else if ($givenAmount > 0) {
+			if ($givenAmount >= Coin::TWENTYFIVE_CENTS && $availableChange[Coin::TWENTYFIVE_CENTS] > 0) {
+				$availableChange[Coin::TWENTYFIVE_CENTS]--;
+				$newGivenAmount = $givenAmount - Coin::TWENTYFIVE_CENTS;
+				$areContained = $this->isGivenAmountContainedInThisAvailableChange($newGivenAmount, $availableChange);
+				if ($areContained) {
+					$this->changeToReturn[Coin::TWENTYFIVE_CENTS]++;
+					return true;
+				}
+				$availableChange[Coin::TWENTYFIVE_CENTS]++;
+			}
+
+			if ($givenAmount >= Coin::TEN_CENTS && $availableChange[Coin::TEN_CENTS] > 0) {
+				$availableChange[Coin::TEN_CENTS]--;
+				$newGivenAmount = $givenAmount - Coin::TEN_CENTS;
+				$areContained = $this->isGivenAmountContainedInThisAvailableChange($newGivenAmount, $availableChange);
+				if ($areContained) {
+					$this->changeToReturn[Coin::TEN_CENTS]++;
+					return true;
+				}
+				$availableChange[Coin::TEN_CENTS]++;
+			}
+
+			if ($givenAmount >= Coin::FIVE_CENTS && $availableChange[Coin::FIVE_CENTS] > 0) {
+				$availableChange[Coin::FIVE_CENTS]--;
+				$newGivenAmount = $givenAmount - Coin::FIVE_CENTS;
+				$areContained = $this->isGivenAmountContainedInThisAvailableChange($newGivenAmount, $availableChange);
+				if ($areContained) {
+					$this->changeToReturn[Coin::FIVE_CENTS]++;
+					return true;
+				}
+				$availableChange[Coin::FIVE_CENTS]++;
+			}
+		}
+		return $areContained;
 	}
 
 	private function reduceStock(string $itemName): void
@@ -158,6 +214,29 @@ class VendingMachine
 
 	private function payItem(string $itemName): void
 	{
+		$this->change = $this->combineCoinArrays($this->change, $this->insertedCoins);
+		$this->change = $this->substractCoinArrays($this->change, $this->changeToReturn);
+		$this->insertedCoins = [];
+	}
 
+	private function substractCoinArrays(array $first, array $second): array
+	{
+		$result = [];
+		foreach ($first as $key => $value) {
+			if (isset($second[$key])) {
+				$result[$key] = $first[$key] - $second[$key];
+			} else {
+				$result[$key] = $first[$key];
+			}
+		}
+		return $result;
+	}
+
+	private function ejectPurchaseChange(): array
+	{
+		$ejectedChange = $this->changeToReturn;
+		$this->changeToReturn = [];
+		
+		return $ejectedChange;
 	}
 }
