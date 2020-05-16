@@ -134,8 +134,6 @@ class VendingMachine
 	{
 		$itemPrice = self::$itemPrices[$itemName];
 		$totalInsertedCoinsValue = $this->coinArrayAdder->__invoke($this->insertedCoins);
-		echo $totalInsertedCoinsValue.PHP_EOL;
-		echo $itemPrice.PHP_EOL;
 		$neededChangeAmount = $totalInsertedCoinsValue - $itemPrice;
 		$combinedVendingMachineChangeAfterPaying = $this->combineCoinArrays($this->change, $this->insertedCoins);
 
