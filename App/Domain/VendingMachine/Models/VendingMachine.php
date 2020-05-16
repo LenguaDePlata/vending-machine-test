@@ -164,11 +164,7 @@ class VendingMachine
 	private function isGivenAmountContainedInThisAvailableChange(float $givenAmount, array $availableChange): bool
 	{
 		$areContained = false;
-			echo $givenAmount.PHP_EOL;
-			print_r($availableChange);
-			echo PHP_EOL;
 		if ($givenAmount == 0) {
-			echo 'here'.PHP_EOL;
 			$areContained = true;
 		} else if ($givenAmount > 0) {
 			if ($givenAmount >= Coin::TWENTYFIVE_CENTS && $availableChange[Coin::TWENTYFIVE_CENTS] > 0) {

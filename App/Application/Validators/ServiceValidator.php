@@ -16,7 +16,7 @@ class ServiceValidator implements Validator
 		}
 		foreach ($arguments as $argument) {
 			if (!preg_match('/^\d+$/', $argument)) {
-				throw new InvalidArgumentTypeException('int');
+				throw new InvalidArgumentTypeException('unsigned int');
 			}
 		}
 	}
