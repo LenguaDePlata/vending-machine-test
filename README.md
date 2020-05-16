@@ -1,7 +1,7 @@
 # Vending Machine Technical Test
 
 ## Usage
-----
+
 Vendingmachine is a command-line PHP service for in-memory stock and change keeping, based on the technical test requirements for this challenge.
 
 Built using PHP 7.4+. It requires composer to work.
@@ -71,7 +71,7 @@ The GET-ITEM operation purchases one of the available items in stock in the vend
 
 The operation has the following syntax:
 
-   <inserted_coin_1>, <inserted_coin_2>,... <inserted_coin_n>, GET-<item_name_in_caps>
+    <inserted_coin_1>, <inserted_coin_2>,... <inserted_coin_n>, GET-<item_name_in_caps>
 
 - **inserted_coin_x** (float, required): a float with the value of one of the accepted coins by the vending machine (0.05, 0.10, 0.25, 1). There is no limit to the number of coins that can be inserted
 - **item_name_in_caps** (string, required): the name of the item from the vending machine's stock that we want to purchase, all in caps. The only items available for this vending machine are Water, Soda, and Juice.
