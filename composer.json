@@ -2,6 +2,9 @@
     "name": "inaki/vending-machine-test",
     "description": "Technical challenge",
     "type": "project",
+    "config": {
+        "optimize-autoloader": true
+    },
     "require": {
         "php-di/php-di": "^6.1"
     },

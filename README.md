@@ -14,6 +14,18 @@ Then, to launch it, execute
 
     php vendingmachine.php
 
+If you don't have neither composer or PHP, it can be run via Docker
+
+    docker-compose -f docker/docker-compose.yml up -d
+
+When all containers are up and running, install the composer dependencies
+
+    docker exec docker_app_1 composer install
+
+After all the dependencies are installed, you can run it with
+
+    docker-compose -f docker/docker-compose.yml run app php vendingmachine.php
+
 ### Available operations
 ----
 
