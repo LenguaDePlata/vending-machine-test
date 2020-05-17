@@ -15,9 +15,9 @@ class Reader
 		$this->commandFactory = $commandFactory;
 	}
 
-	public function readLine(): string
+	public function readLine($stream = STDIN): string
 	{
-		return ($this->currentLine = trim(fgets(STDIN)));
+		return ($this->currentLine = trim(fgets($stream)));
 	}
 
 	public function quitted(): bool
