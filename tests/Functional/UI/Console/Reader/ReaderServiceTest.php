@@ -6,9 +6,19 @@ class ReaderServiceTest extends ReaderTestCase
 {
 	public function testReaderExecutesServiceCommand(): void
 	{
+		$this->givenACorrectServiceCommand();
+		$this->whenTheCommandIsRead();
+		$this->thenTheCommandReturnsAnEmptyResponse();
+	}
+
+	private function givenACorrectServiceCommand(): void
+	{
 		fputs($this->testInputStream, '1, 1, 1, 1, 1, 1, SERVICE');
 		rewind($this->testInputStream);
-		$this->reader->readLine($this->testInputStream);
+	}
+
+	private function thenTheCommandReturnsAnEmptyResponse(): void
+	{
 		$this->assertEquals($this->reader->executeCommand(), '');
 	}
 }

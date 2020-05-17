@@ -22,4 +22,9 @@ abstract class ReaderTestCase extends TestCase
 	{
 		fclose($this->testInputStream);
 	}
+
+	protected function whenTheCommandIsRead(): void
+	{
+		$this->reader->readLine($this->testInputStream);
+	}
 }

@@ -7,7 +7,8 @@ class ReaderInsertCoinTest extends ReaderTestCase
 	public function testReaderExecutesInsertCoinCommand(): void
 	{
 		$this->givenACorrectInsertCoinCommand();
-		$this->whenTheCommandIsExecuted();
+		$this->whenTheCommandIsRead();
+		$this->thenTheCommandReturnsAnEmptyResponse();
 		$this->thenTheOnlyCoinsInsideTheVendingMachineAreThoseInserted();
 	}
 
@@ -17,9 +18,8 @@ class ReaderInsertCoinTest extends ReaderTestCase
 		rewind($this->testInputStream);
 	}
 
-	private function whenTheCommandIsExecuted(): void
+	private function thenTheCommandReturnsAnEmptyResponse(): void
 	{
-		$this->reader->readLine($this->testInputStream);
 		$this->assertEquals($this->reader->executeCommand(), '');
 	}
 
