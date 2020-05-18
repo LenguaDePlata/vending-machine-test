@@ -14,6 +14,12 @@ Then, to launch it, execute
 
     php vendingmachine.php
 
+You can run the tests with phpunit:
+
+    vendor/bin/phpunit
+
+----
+
 If you don't have neither composer or PHP, it can be run via Docker
 
     docker-compose -f docker/docker-compose.yml up -d
@@ -25,6 +31,10 @@ When all containers are up and running, install the composer dependencies
 After all the dependencies are installed, you can run it with
 
     docker-compose -f docker/docker-compose.yml run app php vendingmachine.php
+
+Now you can run the functional tests:
+
+    docker exec docker_app_1 vendor/bin/phpunit
 
 ### Available operations
 ----
