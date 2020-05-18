@@ -31,21 +31,4 @@ class ReaderGetTest extends ReaderTestCase
 	{
 		$this->assertEquals($this->reader->executeCommand(), '-> SODA, 0.10, 0.25');
 	}
-
-	protected function tearDown(): void
-	{
-		fputs($this->testInputStream, '0, 0, 0, 0, 0, 0, SERVICE');
-		rewind($this->testInputStream);
-		$this->reader->readLine($this->testInputStream);
-		$this->reader->executeCommand();
-		ftruncate($this->testInputStream, 0);
-
-		fputs($this->testInputStream, 'RETURN-COIN');
-		rewind($this->testInputStream);
-		$this->reader->readLine($this->testInputStream);
-		$this->reader->executeCommand();
-		ftruncate($this->testInputStream, 0);
-
-		parent::tearDown();
-	}
 }

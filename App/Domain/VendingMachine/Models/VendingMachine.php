@@ -21,6 +21,7 @@ class VendingMachine
 	private $change = [];
 	private $stock = [];
 	private $insertedCoins = [];
+	private $changeToReturn = [];
 
 	private $coinArrayAdder;
 
@@ -137,7 +138,7 @@ class VendingMachine
 		$neededChangeAmount = $totalInsertedCoinsValue - $itemPrice;
 		$combinedVendingMachineChangeAfterPaying = $this->combineCoinArrays($this->change, $this->insertedCoins);
 
-		if (!$this->isGivenAmountContainedInThisAvailableChange($neededChangeAmount, $combinedVendingMachineChangeAfterPaying)) {
+		if (!$this->isGivenAmountContainedInThisAvailableChange(intval($neededChangeAmount*100), $combinedVendingMachineChangeAfterPaying)) {
 			throw new NotEnoughChangeException($itemPrice);
 		}
 	}
@@ -159,15 +160,15 @@ class VendingMachine
 		return $result;
 	}
 
-	private function isGivenAmountContainedInThisAvailableChange(float $givenAmount, array $availableChange): bool
+	private function isGivenAmountContainedInThisAvailableChange(int $givenAmount, array $availableChange): bool
 	{
 		$areContained = false;
 		if ($givenAmount == 0) {
 			$areContained = true;
 		} else if ($givenAmount > 0) {
-			if ($givenAmount >= Coin::TWENTYFIVE_CENTS && $availableChange[Coin::TWENTYFIVE_CENTS] > 0) {
+			if ($givenAmount >= intval(Coin::TWENTYFIVE_CENTS*100) && $availableChange[Coin::TWENTYFIVE_CENTS] > 0) {
 				$availableChange[Coin::TWENTYFIVE_CENTS]--;
-				$newGivenAmount = $givenAmount - Coin::TWENTYFIVE_CENTS;
+				$newGivenAmount = $givenAmount - intval(Coin::TWENTYFIVE_CENTS*100);
 				$areContained = $this->isGivenAmountContainedInThisAvailableChange($newGivenAmount, $availableChange);
 				if ($areContained) {
 					$this->changeToReturn[Coin::TWENTYFIVE_CENTS]++;
@@ -176,9 +177,9 @@ class VendingMachine
 				$availableChange[Coin::TWENTYFIVE_CENTS]++;
 			}
 
-			if ($givenAmount >= Coin::TEN_CENTS && $availableChange[Coin::TEN_CENTS] > 0) {
+			if ($givenAmount >= intval(Coin::TEN_CENTS*100) && $availableChange[Coin::TEN_CENTS] > 0) {
 				$availableChange[Coin::TEN_CENTS]--;
-				$newGivenAmount = $givenAmount - Coin::TEN_CENTS;
+				$newGivenAmount = $givenAmount - intval(Coin::TEN_CENTS*100);
 				$areContained = $this->isGivenAmountContainedInThisAvailableChange($newGivenAmount, $availableChange);
 				if ($areContained) {
 					$this->changeToReturn[Coin::TEN_CENTS]++;
@@ -187,9 +188,9 @@ class VendingMachine
 				$availableChange[Coin::TEN_CENTS]++;
 			}
 
-			if ($givenAmount >= Coin::FIVE_CENTS && $availableChange[Coin::FIVE_CENTS] > 0) {
+			if ($givenAmount >= intval(Coin::FIVE_CENTS*100) && $availableChange[Coin::FIVE_CENTS] > 0) {
 				$availableChange[Coin::FIVE_CENTS]--;
-				$newGivenAmount = $givenAmount - Coin::FIVE_CENTS;
+				$newGivenAmount = $givenAmount - intval(Coin::FIVE_CENTS*100);
 				$areContained = $this->isGivenAmountContainedInThisAvailableChange($newGivenAmount, $availableChange);
 				if ($areContained) {
 					$this->changeToReturn[Coin::FIVE_CENTS]++;

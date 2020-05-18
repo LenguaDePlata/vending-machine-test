@@ -2,7 +2,7 @@
 
 namespace App\Application\Validators;
 
-use App\Application\Exceptions\NotEnoughArgumentsException;
+use App\Application\Exceptions\InvalidNumberOfArgumentsException;
 use App\Application\Exceptions\InvalidArgumentTypeException;
 
 class ServiceValidator implements Validator
